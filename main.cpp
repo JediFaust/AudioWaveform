@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include "audioamplitude.h"
 
 
@@ -14,6 +15,10 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
+
+    audioamplitude* myGlobal = new audioamplitude();
+    myGlobal->getAmplitude();
+    engine.rootContext()->setContextProperty("myGlobal", myGlobal);
 
     qmlRegisterType<audioamplitude>("AudioAmplitude", 1, 0, "AudioAmplitude");
     engine.load(url);
