@@ -8,9 +8,8 @@ Window {
     visible: true
     title: "Audio Amplitude"
 
-    ListModel {
-        id: samples
-        ListElement { v: 0 }
+    AudioAmplitude {
+        id: audioAmp
     }
 
     Rectangle {
@@ -29,7 +28,7 @@ Window {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    audioAmp.getAmplitude();
+                    audioAmp.getSamples();
                     clicker.visible = false;
                 }
             }
@@ -44,11 +43,11 @@ Window {
                 anchors.centerIn: parent
                 spacing: 2
                 Repeater {
-                    model: samples
+                    model: audioAmp.samples
                     Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         width: 3
-                        height: v
+                        height: modelData
                         radius: 1
                         color: "blue"
                     }
@@ -58,17 +57,5 @@ Window {
             }
         }
 
-        AudioAmplitude {
-            id: audioAmp
-            onSamplesChanged: (_samples) => {
-                    samples.clear()
-                    for(let i = 0; i < _samples.length; i++) {
-                        let newItem = {}
-                        // Multiply by scaleFactor and assign to the model
-                        newItem.v = _samples[i];
-                        samples.append(newItem)
-                    }
-            }
-        }
     }
 }

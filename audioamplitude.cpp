@@ -15,15 +15,24 @@ audioamplitude::audioamplitude(QObject *parent)
     m_instance = this;
 }
 
-void audioamplitude::getAmplitude() {
+void audioamplitude::getSamples() {
     QJniObject nativeObj = QNativeInterface::QAndroidApplication::context();
 
     nativeObj.callMethod<int>("getAmplitude", "()I");
 }
 
+void audioamplitude::setSamples(QVariantList newSamples) {
+    m_samples = newSamples;
+    emit samplesChanged();
+}
+
+QVariantList audioamplitude::samples() {
+    return m_samples;
+}
+
 extern "C" JNIEXPORT void JNICALL Java_com_AudioAmplitude_AudioAmplitude_transferSamples(JNIEnv *env, jobject, jstring _data){
     auto data = QJsonDocument::fromJson(env->GetStringUTFChars(_data, 0)).array().toVariantList();
-    emit audioamplitude::instance()->samplesChanged(data);
+    audioamplitude::instance()->setSamples(data);
 }
 
 
