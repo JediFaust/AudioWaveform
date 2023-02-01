@@ -46,12 +46,11 @@ public class AudioAmplitude extends QtActivity {
             try {
                 jsArray.put(resultSamples[i]);
             } catch (JSONException e) {
-                // Error
+                Log.d("JavaLog", "JSON fill exception!");
                 break;
             }
         }
 
-        Log.d("JavaLog", "loop finished~");
         transferSamples(jsArray.toString());
     }
 

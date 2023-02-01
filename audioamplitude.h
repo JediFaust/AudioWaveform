@@ -10,7 +10,6 @@ class audioamplitude : public QObject
 public:
     explicit audioamplitude(QObject *parent = nullptr);
     static audioamplitude *instance() { return m_instance; }
-//    QVariantList samplesArr;
 
 signals:
     void samplesChanged(QVariantList samples);
