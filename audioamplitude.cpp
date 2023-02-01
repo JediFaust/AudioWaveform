@@ -4,12 +4,15 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QVariantList>
 #include "audioamplitude.h"
+
+audioamplitude *audioamplitude::m_instance = nullptr;
 
 audioamplitude::audioamplitude(QObject *parent)
     : QObject{parent}
 {
-
+    m_instance = this;
 }
 
 void audioamplitude::getAmplitude() {
@@ -18,19 +21,9 @@ void audioamplitude::getAmplitude() {
     nativeObj.callMethod<int>("getAmplitude", "()I");
 }
 
-void audioamplitude::setAmplitude(QList<float> _sampleArr) {
-      audioamplitude::samplesArr = _sampleArr;
-}
-
 extern "C" JNIEXPORT void JNICALL Java_com_AudioAmplitude_AudioAmplitude_transferSamples(JNIEnv *env, jobject, jstring _data){
     auto data = QJsonDocument::fromJson(env->GetStringUTFChars(_data, 0)).array().toVariantList();
-    QList<float> tmp;
-    for (int i = 0; i < data.count(); i++) {
-        qDebug() << "Sample in C++: " << data.at(i);
-        tmp.append(data.at(i).toFloat());
-    }
-    audioamplitude::samplesArr = tmp;
-    audioamplitude::samplesChanged();
+    emit audioamplitude::instance()->samplesChanged(data);
 }
 
 

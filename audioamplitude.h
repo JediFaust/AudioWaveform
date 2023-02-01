@@ -2,21 +2,23 @@
 #define AUDIOAMPLITUDE_H
 
 #include <QObject>
+#include <QVariantList>
 
 class audioamplitude : public QObject
 {
     Q_OBJECT
-//    Q_PROPERTY(QVariantList samplesArr READ samplesArr WRITE setAmplitude NOTIFY samplesChanged)
 public:
     explicit audioamplitude(QObject *parent = nullptr);
-    static QList<float> samplesArr;
+    static audioamplitude *instance() { return m_instance; }
+//    QVariantList samplesArr;
 
 signals:
-    static void samplesChanged();
+    void samplesChanged(QVariantList samples);
 
 public slots:
     void getAmplitude();
-    void setAmplitude(QList<float>);
+private:
+    static audioamplitude *m_instance;
 };
 
 #endif // AUDIOAMPLITUDE_H
